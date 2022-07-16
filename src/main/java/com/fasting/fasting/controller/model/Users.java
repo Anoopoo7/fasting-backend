@@ -1,7 +1,6 @@
 package com.fasting.fasting.controller.model;
 
 import java.util.Date;
-import java.util.List;
 import java.util.Map;
 
 import org.springframework.data.annotation.Id;

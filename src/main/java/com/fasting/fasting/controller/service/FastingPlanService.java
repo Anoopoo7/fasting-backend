@@ -27,6 +27,22 @@ public class FastingPlanService {
         fastingPlan.setTotalUsers(0);
         log.info("saving fasting plan {}", fastingPlan);
         fastingPlanRepository.save(fastingPlan);
-        return null;
+        return fastingPlan;
+    }
+
+    public Object getFastingPlanById(String fastingPlanId) {
+        if (null == fastingPlanId) {
+            throw new ResponseStatusException(
+                    HttpStatus.BAD_REQUEST, FasException.INVALID_DATA.name());
+        }
+        try {
+            FastingPlan fastingPlan = fastingPlanRepository.findById(fastingPlanId).get();
+            log.info("fetched fasting plan {}", fastingPlan);
+            return fastingPlan;
+        } catch (Exception e) {
+            log.info("no plan is available with {} id", fastingPlanId);
+            throw new ResponseStatusException(
+                    HttpStatus.NOT_FOUND, FasException.INVALID_DATA.name());
+        }
     }
 }
