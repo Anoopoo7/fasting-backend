@@ -20,7 +20,7 @@ public class FastingPlanService {
     public Object addNewFastingPlan(FastingPlan fastingPlan) {
         if (fastingPlan.getFasting_items().isEmpty()) {
             throw new ResponseStatusException(
-                    HttpStatus.BAD_REQUEST, FasException.INVALID_FASTING_PLAN.name());
+                    HttpStatus.OK, FasException.INVALID_FASTING_PLAN.name());
         }
         fastingPlan.setDeficultyRate(0);
         fastingPlan.setSuccessRate(0);
@@ -33,7 +33,7 @@ public class FastingPlanService {
     public Object getFastingPlanById(String fastingPlanId) {
         if (null == fastingPlanId) {
             throw new ResponseStatusException(
-                    HttpStatus.BAD_REQUEST, FasException.INVALID_DATA.name());
+                    HttpStatus.OK, FasException.INVALID_DATA.name());
         }
         try {
             FastingPlan fastingPlan = fastingPlanRepository.findById(fastingPlanId).get();
@@ -42,7 +42,7 @@ public class FastingPlanService {
         } catch (Exception e) {
             log.info("no plan is available with {} id", fastingPlanId);
             throw new ResponseStatusException(
-                    HttpStatus.NOT_FOUND, FasException.INVALID_DATA.name());
+                    HttpStatus.OK, FasException.INVALID_DATA.name());
         }
     }
 }

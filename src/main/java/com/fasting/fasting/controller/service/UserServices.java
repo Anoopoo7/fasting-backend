@@ -29,12 +29,12 @@ public class UserServices {
     public Object getUserRegister(Users userdata) {
         if (null == userdata) {
             throw new ResponseStatusException(
-                    HttpStatus.BAD_REQUEST, FasException.USER_DATA_IS_EMPTY.name());
+                    HttpStatus.OK, FasException.USER_DATA_IS_EMPTY.name());
         }
         Users user = getUserByemail(userdata.getEmail());
         if (user != null) {
             throw new ResponseStatusException(
-                    HttpStatus.ALREADY_REPORTED, FasException.USER_ALREADY_EXISTS.name());
+                    HttpStatus.OK, FasException.USER_ALREADY_EXISTS.name());
         }
         userdata.setPassword(passwordhandler.encript(userdata.getPassword()));
         userdata.setLastUpdated(new Date());
@@ -54,13 +54,13 @@ public class UserServices {
     public Object getUserLoggedIn(Users userdata) {
         if (null == userdata) {
             throw new ResponseStatusException(
-                    HttpStatus.BAD_REQUEST, FasException.USER_DATA_IS_EMPTY.name());
+                    HttpStatus.OK, FasException.USER_DATA_IS_EMPTY.name());
         }
         Users user = userRepository.findByEmailAndPassword(userdata.getEmail(),
                 passwordhandler.encript(userdata.getPassword()));
         if (null == user) {
             throw new ResponseStatusException(
-                    HttpStatus.NOT_FOUND, FasException.USER_NOT_FOUND.name());
+                    HttpStatus.OK, FasException.USER_NOT_FOUND.name());
         }
         user.setLastUpdated(new Date());
         userRepository.save(user);
