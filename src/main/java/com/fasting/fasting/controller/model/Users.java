@@ -20,11 +20,12 @@ public class Users {
     private String first_name;
     private String last_name;
     private int age;
+    private String gender;
     private String bio;
     private String image;
     private String email;
     private String password;
-    private Map<String,Boolean> fastIds;
+    private Map<String, Boolean> fastIds;
     private boolean active;
     private Date lastUpdated;
 }
