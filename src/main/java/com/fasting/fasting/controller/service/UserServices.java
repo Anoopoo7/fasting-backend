@@ -52,6 +52,7 @@ public class UserServices {
     }
 
     public Object getUserLoggedIn(Users userdata) {
+        log.info("user details received as {}", userdata);
         if (null == userdata) {
             throw new ResponseStatusException(
                     HttpStatus.OK, FasException.USER_DATA_IS_EMPTY.name());
@@ -63,6 +64,23 @@ public class UserServices {
                     HttpStatus.OK, FasException.USER_NOT_FOUND.name());
         }
         user.setLastUpdated(new Date());
+        userRepository.save(user);
+        return userHelper.formatUserResponse(user);
+    }
+
+    public Object editUserData(Users userdata) {
+        if (null == userdata) {
+            throw new ResponseStatusException(
+                    HttpStatus.OK, FasException.USER_DATA_IS_EMPTY.name());
+        }
+        Users user = getUserByemail(userdata.getEmail());
+        if (user == null) {
+            throw new ResponseStatusException(
+                    HttpStatus.OK, FasException.USER_NOT_FOUND.name());
+        }
+        user.setFirst_name(userdata.getFirst_name());
+        user.setBio(userdata.getBio());
+        log.info("saving new user with details {}", user);
         userRepository.save(user);
         return userHelper.formatUserResponse(user);
     }

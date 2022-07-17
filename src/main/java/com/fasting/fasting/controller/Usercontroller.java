@@ -35,5 +35,11 @@ public class Usercontroller {
                 HttpStatus.OK);
     }
 
+    @PostMapping("/edit")
+    public ResponseEntity<Response> editUserData(@RequestBody Users userdata) {
+        return new ResponseEntity<>(
+                new Response(true, userServices.editUserData(userdata), "user successfully edited!"),
+                HttpStatus.OK);
+    }
+
 }
-    
