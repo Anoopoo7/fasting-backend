@@ -42,4 +42,11 @@ public class Usercontroller {
                 HttpStatus.OK);
     }
 
+    @PostMapping("/photo")
+    public ResponseEntity<Response> uploadPhoto(@RequestBody Users userdata) {
+        return new ResponseEntity<>(
+                new Response(true, userServices.uploadPhoto(userdata), "user photo updated!"),
+                HttpStatus.OK);
+    }
+
 }

@@ -84,4 +84,20 @@ public class UserServices {
         userRepository.save(user);
         return userHelper.formatUserResponse(user);
     }
+
+    public Object uploadPhoto(Users userdata) {
+        if (null == userdata) {
+            throw new ResponseStatusException(
+                    HttpStatus.OK, FasException.USER_DATA_IS_EMPTY.name());
+        }
+        Users user = getUserByemail(userdata.getEmail());
+        if (user == null) {
+            throw new ResponseStatusException(
+                    HttpStatus.OK, FasException.USER_NOT_FOUND.name());
+        }
+        user.setImage(userdata.getImage());
+        log.info("saving new user with details {}", user.getEmail());
+        userRepository.save(user);
+        return userHelper.formatUserResponse(user);
+    }
 }
