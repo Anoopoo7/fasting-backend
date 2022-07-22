@@ -25,6 +25,8 @@ public class UserServices {
     private Passwordhandler passwordhandler;
     @Autowired
     private UserHelper userHelper;
+    @Autowired
+    private ProfilePhotosServices profilePhotosServices;
 
     public Object getUserRegister(Users userdata) {
         if (null == userdata) {
@@ -44,11 +46,22 @@ public class UserServices {
         return userHelper.formatUserResponse(userdata);
     }
 
-    private Users getUserByemail(String email) {
+    public Users getUserByemail(String email) {
         Users user = userRepository.findByEmail(email);
         log.info("user details fetches as {} form mail: {}", user, email);
         return user;
 
+    }
+
+    public Users getUserByUserId(String userId) {
+        Users user = null;
+        try {
+            user = userRepository.findById(userId).get();
+            log.info("user details fetches as {} form Id: {}", user, userId);
+        } catch (Exception e) {
+            log.info("user details fetches as {} form Id: {}", user, userId);
+        }
+        return user;
     }
 
     public Object getUserLoggedIn(Users userdata) {
@@ -95,7 +108,8 @@ public class UserServices {
             throw new ResponseStatusException(
                     HttpStatus.OK, FasException.USER_NOT_FOUND.name());
         }
-        user.setImage(userdata.getImage());
+        profilePhotosServices.savePhotoToUser(user.getId(),userdata.getImage());
+        user.setImage(user.getId());
         log.info("saving new user with details {}", user.getEmail());
         userRepository.save(user);
         return userHelper.formatUserResponse(user);

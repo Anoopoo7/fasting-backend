@@ -1,0 +1,32 @@
+package com.fasting.fasting.controller.service;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+
+import com.fasting.fasting.controller.model.ProfilePhotos;
+import com.fasting.fasting.controller.service.repository.ProfilePhotosRepository;
+
+import lombok.extern.log4j.Log4j2;
+
+@Service
+@Log4j2
+public class ProfilePhotosServices {
+
+    @Autowired
+    private ProfilePhotosRepository profilePhotosRepository;
+
+    public void savePhotoToUser(String id, String image) {
+        ProfilePhotos profilePhoto = new ProfilePhotos();
+        profilePhoto.setPhoto(image);
+        profilePhoto.setUserId(id);
+        profilePhoto.setActive(true);
+        log.info("saving new photo to user with details {}", profilePhoto);
+        profilePhotosRepository.save(profilePhoto);
+    }
+
+    public String getUserPhoto(String userId) {
+        String image = profilePhotosRepository.findByUserIdAndActive(userId, true);
+        return image;
+    }
+
+}

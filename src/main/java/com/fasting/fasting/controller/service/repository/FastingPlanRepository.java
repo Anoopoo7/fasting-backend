@@ -5,6 +5,8 @@ import org.springframework.data.mongodb.repository.MongoRepository;
 import com.fasting.fasting.controller.model.FastingPlan;
 
 @Repository
-public interface FastingPlanRepository extends MongoRepository <FastingPlan,String> {
-    
+public interface FastingPlanRepository extends MongoRepository<FastingPlan, String> {
+
+    FastingPlan findByIdAndActive(String fastingPlanId, boolean active);
+
 }
