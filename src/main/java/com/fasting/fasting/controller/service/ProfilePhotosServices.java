@@ -32,8 +32,8 @@ public class ProfilePhotosServices {
     }
 
     public String getUserPhoto(String userId) {
-        String image = profilePhotosRepository.findByUserIdAndActive(userId, true);
-        return image;
+        ProfilePhotos profilePhotos = profilePhotosRepository.findByUserIdAndActive(userId, true);
+        return (null != profilePhotos) ? profilePhotos.getPhoto() : null;
     }
 
 }

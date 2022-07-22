@@ -8,7 +8,7 @@ import com.fasting.fasting.controller.model.ProfilePhotos;
 @Repository
 public interface ProfilePhotosRepository extends MongoRepository<ProfilePhotos, String> {
 
-    String findByUserIdAndActive(String userId, boolean b);
+    ProfilePhotos findByUserIdAndActive(String userId, boolean b);
 
     ProfilePhotos findByUserId(String id);
 
