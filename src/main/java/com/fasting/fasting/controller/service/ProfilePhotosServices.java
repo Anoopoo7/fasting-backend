@@ -16,6 +16,13 @@ public class ProfilePhotosServices {
     private ProfilePhotosRepository profilePhotosRepository;
 
     public void savePhotoToUser(String id, String image) {
+        ProfilePhotos existingPhoto = profilePhotosRepository.findByUserId(id);
+        if (null != existingPhoto) {
+            existingPhoto.setPhoto(image);
+            profilePhotosRepository.save(existingPhoto);
+            log.info("saving new photo to user with details {}", existingPhoto);
+            return;
+        }
         ProfilePhotos profilePhoto = new ProfilePhotos();
         profilePhoto.setPhoto(image);
         profilePhoto.setUserId(id);

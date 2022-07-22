@@ -10,4 +10,6 @@ public interface ProfilePhotosRepository extends MongoRepository<ProfilePhotos, 
 
     String findByUserIdAndActive(String userId, boolean b);
 
+    ProfilePhotos findByUserId(String id);
+
 }
