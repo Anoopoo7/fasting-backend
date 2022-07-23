@@ -25,13 +25,33 @@ public class FastingPlanController {
     @PostMapping("/add")
     public ResponseEntity<Response> addNewFastingPlan(@RequestBody FastingPlan fastingPlan) {
         return new ResponseEntity<>(
-                new Response(true, fastingPlanService.addNewFastingPlan(fastingPlan), "fasting plan successfully added!"),
+                new Response(true, fastingPlanService.addNewFastingPlan(fastingPlan),
+                        "fasting plan successfully added!"),
                 HttpStatus.OK);
     }
+
     @GetMapping("/{fastingPlanId}")
     public ResponseEntity<Response> getFastingPlanById(@PathVariable String fastingPlanId) {
         return new ResponseEntity<>(
-                new Response(true, fastingPlanService.getFastingPlanById(fastingPlanId), "fetched fasting plan seccessfully!"),
+                new Response(true, fastingPlanService.getFastingPlanById(fastingPlanId),
+                        "fetched fasting plan seccessfully!"),
+                HttpStatus.OK);
+    }
+
+    @GetMapping("/startPlan/userId/{userId}/fastId/{fastId}")
+    public ResponseEntity<Response> startPlanByUserIdAndPlanId(@PathVariable String userId,
+            @PathVariable String fastId) {
+        return new ResponseEntity<>(
+                new Response(true, fastingPlanService.startPlanByUserIdAndPlanId(userId, fastId),
+                        "activate fasting plan seccessfully!"),
+                HttpStatus.OK);
+    }
+
+    @GetMapping("/userId/{userId}")
+    public ResponseEntity<Response> getUserActivePlan(@PathVariable String userId) {
+        return new ResponseEntity<>(
+                new Response(true, fastingPlanService.getUserActivePlan(userId),
+                        "fetched fasting plan seccessfully!"),
                 HttpStatus.OK);
     }
 }
