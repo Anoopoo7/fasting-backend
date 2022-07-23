@@ -22,6 +22,14 @@ public class FastingPlanController {
     @Autowired
     private FastingPlanService fastingPlanService;
 
+    @GetMapping("page/{page}")
+    public ResponseEntity<Response> getPlans(@PathVariable int page) {
+        return new ResponseEntity<>(
+                new Response(true, fastingPlanService.getPlans(page),
+                        "fetched fasting plan seccessfully!"),
+                HttpStatus.OK);
+    }
+
     @PostMapping("/add")
     public ResponseEntity<Response> addNewFastingPlan(@RequestBody FastingPlan fastingPlan) {
         return new ResponseEntity<>(

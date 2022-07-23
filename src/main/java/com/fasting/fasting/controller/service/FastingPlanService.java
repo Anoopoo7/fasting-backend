@@ -13,6 +13,8 @@ import com.fasting.fasting.controller.model.FastingPlan;
 import com.fasting.fasting.controller.model.FastingPlanProgress;
 import com.fasting.fasting.controller.model.Fasting_item;
 import com.fasting.fasting.controller.model.Users;
+import com.fasting.fasting.controller.service.helper.FastingPlanHelper;
+import com.fasting.fasting.controller.service.repository.FastingPlanCustomRepository;
 import com.fasting.fasting.controller.service.repository.FastingPlanProgressRepository;
 import com.fasting.fasting.controller.service.repository.FastingPlanRepository;
 import com.fasting.fasting.core.FasException;
@@ -28,6 +30,10 @@ public class FastingPlanService {
     private FastingPlanProgressRepository fastingPlanProgressRepository;
     @Autowired
     private UserServices userServices;
+    @Autowired
+    private FastingPlanCustomRepository fastingPlanCustomRepository;
+    @Autowired
+    private FastingPlanHelper fastingPlanHelper;
 
     public Object addNewFastingPlan(FastingPlan fastingPlan) {
         if (fastingPlan.getFasting_items().isEmpty()) {
@@ -66,7 +72,7 @@ public class FastingPlanService {
             throw new ResponseStatusException(
                     HttpStatus.OK, FasException.INVALID_DATA.name());
         }
-        if(getUserActivePlan(userId) != null){
+        if (getUserActivePlan(userId) != null) {
             throw new ResponseStatusException(
                     HttpStatus.OK, FasException.USER_ALREADY_IN_A_PLAN.name());
         }
@@ -98,5 +104,11 @@ public class FastingPlanService {
         FastingPlanProgress userCurrentPlan = fastingPlanProgressRepository.findByUserIdAndStatus(userId, false);
         log.info("fetched fastplan {}", userCurrentPlan);
         return userCurrentPlan;
+    }
+
+    public Object getPlans(int page) {
+        List<FastingPlan> fastingPlan = fastingPlanCustomRepository.getTopFastingPlanWithPagination(page);
+        Long totalCount = fastingPlanRepository.countByActive(true);
+        return fastingPlanHelper.formatFastingPageList(fastingPlan, totalCount);
     }
 }

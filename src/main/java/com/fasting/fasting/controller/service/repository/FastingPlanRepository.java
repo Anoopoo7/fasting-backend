@@ -9,4 +9,6 @@ public interface FastingPlanRepository extends MongoRepository<FastingPlan, Stri
 
     FastingPlan findByIdAndActive(String fastingPlanId, boolean active);
 
+    Long countByActive(boolean b);
+
 }
