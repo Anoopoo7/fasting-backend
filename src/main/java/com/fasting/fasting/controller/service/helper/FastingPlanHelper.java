@@ -21,7 +21,7 @@ public class FastingPlanHelper {
         long partial = totalCount % 10;
         long full = (totalCount - partial) / 10;
         fastingPlanResponse.setPages((full + (partial != 0 ? 1 : 0)) - 1);
-        fastingPlanResponse.setCurrentPage(page);
+        fastingPlanResponse.setCurrentPage(page+1);
         return fastingPlanResponse;
     }
 
