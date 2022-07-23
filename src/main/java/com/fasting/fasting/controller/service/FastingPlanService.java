@@ -109,6 +109,6 @@ public class FastingPlanService {
     public Object getPlans(int page) {
         List<FastingPlan> fastingPlan = fastingPlanCustomRepository.getTopFastingPlanWithPagination(page);
         Long totalCount = fastingPlanRepository.countByActive(true);
-        return fastingPlanHelper.formatFastingPageList(fastingPlan, totalCount);
+        return fastingPlanHelper.formatFastingPageList(fastingPlan, totalCount, page);
     }
 }

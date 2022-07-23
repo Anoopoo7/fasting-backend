@@ -8,4 +8,5 @@ public class FastingPlanResponse {
     private List<FastingPlan> fastingPlan;
     private long totalCounts;
     private long pages;
+    private int currentPage;
 }

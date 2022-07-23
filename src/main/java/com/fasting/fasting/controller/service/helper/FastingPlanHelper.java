@@ -13,7 +13,7 @@ import lombok.extern.log4j.Log4j2;
 @Log4j2
 public class FastingPlanHelper {
 
-    public Object formatFastingPageList(List<FastingPlan> fastingPlan, Long totalCount) {
+    public Object formatFastingPageList(List<FastingPlan> fastingPlan, Long totalCount, int page) {
         log.info("recived data {} and total count {}", fastingPlan, totalCount);
         FastingPlanResponse fastingPlanResponse = new FastingPlanResponse();
         fastingPlanResponse.setFastingPlan(fastingPlan);
@@ -21,6 +21,7 @@ public class FastingPlanHelper {
         long partial = totalCount % 10;
         long full = (totalCount - partial) / 10;
         fastingPlanResponse.setPages((full + (partial != 0 ? 1 : 0)) - 1);
+        fastingPlanResponse.setCurrentPage(page);
         return fastingPlanResponse;
     }
 
