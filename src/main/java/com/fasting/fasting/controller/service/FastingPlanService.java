@@ -131,7 +131,13 @@ public class FastingPlanService {
 
     public Object getUserActivePlan(String userId) {
         log.info("reached userId {}", userId);
-        FastingPlanProgress userCurrentPlan = fastingPlanProgressRepository.findByUserIdAndStatus(userId, false);
+        Date today_day = new Date();
+        String today = today_day.getYear() + "-" + today_day.getMonth() + "-" + today_day.getDate();
+        List<String> todayList = new ArrayList<>();
+        todayList.add(today);
+        FastingPlanProgress userCurrentPlan = fastingPlanProgressRepository
+                .findByUserIdAndStatusAndEnabledAndActiveDaysIn(userId,
+                        false, true, todayList);
         log.info("fetched fastplan {}", userCurrentPlan);
         return userCurrentPlan;
     }
