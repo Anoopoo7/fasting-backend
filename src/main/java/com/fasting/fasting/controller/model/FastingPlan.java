@@ -16,7 +16,7 @@ public class FastingPlan {
     private String name;
     private String foodType;
     private String ageGroup;
-    private Integer duration;
+    private int duration;
     private List<Fasting_item> fasting_items;
     private List<String> labels;
     private boolean visible;

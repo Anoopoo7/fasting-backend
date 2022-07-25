@@ -12,6 +12,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.fasting.fasting.controller.model.FastingPlan;
+import com.fasting.fasting.controller.model.StartPlanRequestView;
 import com.fasting.fasting.controller.service.FastingPlanService;
 import com.fasting.fasting.controller.utils.Response;
 
@@ -46,11 +47,10 @@ public class FastingPlanController {
                 HttpStatus.OK);
     }
 
-    @GetMapping("/startPlan/userId/{userId}/fastId/{fastId}")
-    public ResponseEntity<Response> startPlanByUserIdAndPlanId(@PathVariable String userId,
-            @PathVariable String fastId) {
+    @PostMapping("/startPlan")
+    public ResponseEntity<Response> startPlanByUserIdAndPlanId(@RequestBody StartPlanRequestView startPlanRequestView) {
         return new ResponseEntity<>(
-                new Response(true, fastingPlanService.startPlanByUserIdAndPlanId(userId, fastId),
+                new Response(true, fastingPlanService.startPlanByUserIdAndPlanId(startPlanRequestView),
                         "activate fasting plan seccessfully!"),
                 HttpStatus.OK);
     }

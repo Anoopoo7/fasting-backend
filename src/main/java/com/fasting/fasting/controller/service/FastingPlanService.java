@@ -1,6 +1,7 @@
 package com.fasting.fasting.controller.service;
 
 import java.time.LocalDate;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
@@ -12,6 +13,7 @@ import org.springframework.web.server.ResponseStatusException;
 import com.fasting.fasting.controller.model.FastingPlan;
 import com.fasting.fasting.controller.model.FastingPlanProgress;
 import com.fasting.fasting.controller.model.Fasting_item;
+import com.fasting.fasting.controller.model.StartPlanRequestView;
 import com.fasting.fasting.controller.model.Users;
 import com.fasting.fasting.controller.service.helper.FastingPlanHelper;
 import com.fasting.fasting.controller.service.repository.FastingPlanCustomRepository;
@@ -66,18 +68,18 @@ public class FastingPlanService {
         }
     }
 
-    public Object startPlanByUserIdAndPlanId(String userId, String fastId) {
-        log.info("fetched fasting plan {} and userId {}", fastId, userId);
-        if (userId == null || fastId == null) {
+    public Object startPlanByUserIdAndPlanId(StartPlanRequestView startPlanRequestView) {
+        log.info("fetched fasting plan {}", startPlanRequestView);
+        if (null == startPlanRequestView) {
             throw new ResponseStatusException(
                     HttpStatus.OK, FasException.INVALID_DATA.name());
         }
-        if (getUserActivePlan(userId) != null) {
+        if (getUserActivePlan(startPlanRequestView.getUserId()) != null) {
             throw new ResponseStatusException(
                     HttpStatus.OK, FasException.USER_ALREADY_IN_A_PLAN.name());
         }
-        Users user = userServices.getUserByUserId(userId);
-        FastingPlan fastingPlan = this.getFastingPlanById(fastId);
+        Users user = userServices.getUserByUserId(startPlanRequestView.getUserId());
+        FastingPlan fastingPlan = this.getFastingPlanById(startPlanRequestView.getFastId());
         if (user == null || fastingPlan == null) {
             throw new ResponseStatusException(
                     HttpStatus.OK, FasException.INVALID_DATA.name());
@@ -91,10 +93,38 @@ public class FastingPlanService {
             fasting_item.setLastUpdate(new Date());
         }
         LocalDate date = LocalDate.now();
-        fastingPlanProgress.setStartDate(java.sql.Date.valueOf(date.plusDays(1)));
+        switch (startPlanRequestView.getStartDay()) {
+            case "TOMARROW":
+                fastingPlanProgress.setStartDate(java.sql.Date.valueOf(date.plusDays(1)));
+                break;
+            case "DAYAFTERTOMARROW":
+                fastingPlanProgress.setStartDate(java.sql.Date.valueOf(date.plusDays(2)));
+                break;
+            default:
+                fastingPlanProgress.setStartDate(java.sql.Date.valueOf(date.plusDays(0)));
+                break;
+        }
+        Date startDate = fastingPlanProgress.getStartDate();
+        List<String> activeDays = new ArrayList<String>();
+        String s_day = startDate.getYear() + "-" + startDate.getMonth() + "-" + startDate.getDate();
+        activeDays.add(s_day);
+        for (int i = 1; i < fastingPlan.getDuration(); i++) {
+            if (i == 0) {
+                Date day_day = new Date(startDate.getTime() + (1000 * 60 * 60 * 24));
+                String day = day_day.getYear() + "-" + day_day.getMonth() + "-" + day_day.getDate();
+                activeDays.add(day);
+            } else {
+                Date day_day = new Date(startDate.getTime() + (i * 1000 * 60 * 60 * 24));
+                String day = day_day.getYear() + "-" + day_day.getMonth() + "-" + day_day.getDate();
+                activeDays.add(day);
+            }
+        }
+        fastingPlanProgress.setActiveDays(activeDays);
         fastingPlanProgress.getFastingPlan().setFasting_items(fasting_items);
         fastingPlanProgress.setUpdatedDate(new Date());
-        log.info("adding fasting plan {} with userId {} is {} ", fastId, userId, fastingPlanProgress);
+        fastingPlanProgress.setEnabled(true);
+        log.info("adding fasting plan {} with userId {} is {} ", startPlanRequestView.getFastId(),
+                startPlanRequestView.getUserId(), fastingPlanProgress);
         fastingPlanProgressRepository.save(fastingPlanProgress);
         return fastingPlanProgress;
     }

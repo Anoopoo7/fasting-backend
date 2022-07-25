@@ -1,6 +1,7 @@
 package com.fasting.fasting.controller.model;
 
 import java.util.Date;
+import java.util.List;
 
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
@@ -17,4 +18,6 @@ public class FastingPlanProgress {
     private boolean status;
     private Date updatedDate;
     private Date startDate;
+    private List<String> activeDays;
+    private boolean enabled;
 }
