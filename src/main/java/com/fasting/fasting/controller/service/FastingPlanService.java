@@ -68,13 +68,17 @@ public class FastingPlanService {
         }
     }
 
+    public FastingPlanProgress getFastPlanByUserId(String userId) {
+        return fastingPlanProgressRepository.findByUserIdAndEnabled(userId, true);
+    }
+
     public Object startPlanByUserIdAndPlanId(StartPlanRequestView startPlanRequestView) {
         log.info("fetched fasting plan {}", startPlanRequestView);
         if (null == startPlanRequestView) {
             throw new ResponseStatusException(
                     HttpStatus.OK, FasException.INVALID_DATA.name());
         }
-        if (getUserActivePlan(startPlanRequestView.getUserId()) != null) {
+        if (getFastPlanByUserId(startPlanRequestView.getUserId()) != null) {
             throw new ResponseStatusException(
                     HttpStatus.OK, FasException.USER_ALREADY_IN_A_PLAN.name());
         }
