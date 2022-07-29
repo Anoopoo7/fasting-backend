@@ -133,7 +133,7 @@ public class FastingPlanService {
         return fastingPlanProgress;
     }
 
-    public Object getUserActivePlan(String userId) {
+    public FastingPlanProgress getUserActivePlan(String userId) {
         log.info("reached userId {}", userId);
         Date today_day = new Date();
         String today = today_day.getYear() + "-" + today_day.getMonth() + "-" + today_day.getDate();
@@ -150,5 +150,28 @@ public class FastingPlanService {
         List<FastingPlan> fastingPlan = fastingPlanCustomRepository.getTopFastingPlanWithPagination(page);
         Long totalCount = fastingPlanRepository.countByActive(true);
         return fastingPlanHelper.formatFastingPageList(fastingPlan, totalCount, page);
+    }
+
+    public Object updateFastingItemStatusById(String userId, FastingPlan updateFastingItem) {
+        log.info("recieved fasting plan {} of user {} ", updateFastingItem, userId);
+        FastingPlanProgress planProgress = getUserActivePlan(userId);
+        if (null == planProgress || null == updateFastingItem) {
+            throw new ResponseStatusException(
+                    HttpStatus.OK, FasException.INVALID_DATA.name());
+        }
+        List<Fasting_item> fastingItem = planProgress.getFastingPlan().getFasting_items();
+        List<Fasting_item> updatingItem = updateFastingItem.getFasting_items();
+
+        for (int i = 0; i < updatingItem.size(); i++) {
+            String currentStatus = updatingItem.get(i).getStatus();
+            String actualStatus = fastingItem.get(i).getStatus();
+            if (!currentStatus.equals(actualStatus)) {
+                fastingItem.get(i).setStatus(updatingItem.get(i).getStatus());
+                fastingItem.get(i).setLastUpdate(new Date());
+            }
+        }
+        log.info("saving the fasting plan {}", planProgress);
+        fastingPlanProgressRepository.save(planProgress);
+        return planProgress;
     }
 }
