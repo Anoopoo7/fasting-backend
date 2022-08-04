@@ -19,4 +19,6 @@ public interface FastingPlanProgressRepository extends MongoRepository<FastingPl
 
     FastingPlanProgress findByUserIdAndEnabled(String userId, boolean b);
 
+    List<FastingPlanProgress> findAllByUserIdOrderByStartDateDesc(String userId, boolean b);
+
 }

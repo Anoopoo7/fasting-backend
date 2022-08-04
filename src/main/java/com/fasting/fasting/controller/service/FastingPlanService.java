@@ -88,10 +88,15 @@ public class FastingPlanService {
             throw new ResponseStatusException(
                     HttpStatus.OK, FasException.INVALID_DATA.name());
         }
+        log.info("reached user {} for starting plan {}", user, fastingPlan);
+        fastingPlan.setTotalUsers(fastingPlan.getTotalUsers() + 1);
+        fastingPlanRepository.save(fastingPlan);
+        log.info("add new one totaluser count to fasting plan id {}", fastingPlan.getId());
         FastingPlanProgress fastingPlanProgress = new FastingPlanProgress();
         fastingPlanProgress.setUserId(user.getId());
         fastingPlanProgress.setFastingPlan(fastingPlan);
         List<Fasting_item> fasting_items = fastingPlan.getFasting_items();
+
         for (Fasting_item fasting_item : fasting_items) {
             fasting_item.setStatus("PENDING");
             fasting_item.setLastUpdate(new Date());
@@ -173,5 +178,15 @@ public class FastingPlanService {
         log.info("saving the fasting plan {}", planProgress);
         fastingPlanProgressRepository.save(planProgress);
         return planProgress;
+    }
+
+    public Object getAllUserPlans(String userId) {
+        log.info("reached user id {} ", userId);
+        List<FastingPlanProgress> fastingPlanProgresses =new ArrayList<FastingPlanProgress>();
+        if (null != userId) {
+            fastingPlanProgresses = fastingPlanProgressRepository.findAllByUserIdOrderByStartDateDesc(userId, true);
+        }
+        log.info("fetched plan as {}", fastingPlanProgresses);
+        return fastingPlanProgresses;
     }
 }

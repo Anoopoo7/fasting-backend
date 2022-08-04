@@ -63,6 +63,14 @@ public class FastingPlanController {
                 HttpStatus.OK);
     }
 
+    @GetMapping("/all/userId/{userId}")
+    public ResponseEntity<Response> getAllUserPlans(@PathVariable String userId) {
+        return new ResponseEntity<>(
+                new Response(true, fastingPlanService.getAllUserPlans(userId),
+                        "fetched fasting plans seccessfully!"),
+                HttpStatus.OK);
+    }
+
     @PostMapping("/update/userId/{userId}")
     public ResponseEntity<Response> updateFastingItemStatusById(@PathVariable String userId,
             @RequestBody FastingPlan UpdateFastingItem) {
